@@ -1,0 +1,154 @@
+option java_package = "com.cwa.message";
+option java_outer_classname = "RoomMessage";
+enum RoomCommondIdEnum { //指令号枚举(上行奇数，下行偶数）
+	_GetRoomsUp = 1100201;
+	_GetRoomsDown = 1100202;
+	_CreateRoomUp = 1100203;
+	_CreateRoomDown = 1100204;
+	_JoinRoomUp = 1100205;
+	_JoinRoomDown = 1100206;
+	_UserStateChangeDown = 1100208;
+	_ReadyUp = 1100209;
+	_CancelReadyUp = 1100211;
+	_ExitRoomUp = 1100213;
+	_MatchupRoomUp = 1100215;
+	_CancelMatchupRoomUp = 11002167;
+	_MatchupOutTimeDown = 1100218;
+	_MatchupSuccessDown = 1100220;
+	_GetRoomInfoUp = 1100221;
+	_GetRoomInfoDown = 1100222;
+	_QuickJoinRoomUp = 1100223;
+	_QuickJoinRoomDown = 1100224;
+	_KickOutUp = 1100225;
+	_FightHeroUp = 1100227;
+	_MatchupOutTimeUp = 1100229;
+	_GetUserRoomUp = 1100231;
+	_GetUserRoomDown = 1100232;
+}
+
+//------------------------------------
+message RoomUserInfoBean { //房间用户信息
+	required string userId = 1; //用户id
+	required uint32 state = 2; //用户状态（1未准备2准备）
+	repeated uint32 heroId = 3; //英雄id
+}
+
+message RoomBaseInfoBean { //房间基础信息
+	required uint32 roomId = 1; //房间id
+}
+
+message RoomDetailInfoBean { //房间详细信息
+	required uint32 roomId = 1; //房间id
+	required string masterId = 2; //房主id
+	required uint32 state = 3; //房间状态(1准备中2匹配中3战斗中)
+	repeated RoomUserInfoBean roomUserInfoBean = 4; //房间用户信息
+	optional BattleInfoBean battleInfoBean = 5; //战场基础信息（如果房间状态为战中。则根据战场信息同步战场）
+}
+
+message BattleInfoBean { //战场详细信息
+	required string ip = 1; //战场服ip
+	required uint32 port = 2; //战场服端口
+	required string battleId = 3; //战场id
+	required uint32 attackRoomid = 4; //进攻方房间id
+	required uint32 defineRoomid = 5; //防守方房间id
+}
+//---------------------------------
+
+//获取房间列表
+message GetRoomsUp { //1100201_获取房间列表
+}
+//获取房间列表
+message GetRoomsDown { //1100202_获取房间列表
+	repeated RoomBaseInfoBean roomBaseInfoBean = 1; //房间信息
+}
+//创建房间
+message CreateRoomUp { //1100203_创建房间
+	required uint32 battleKeyId = 1; //战场KeyId
+}
+//创建房间
+message CreateRoomDown { //1100204_创建房间
+	required uint32 roomId = 1; //房间id
+}
+//加入房间
+message JoinRoomUp { //1100205_加入房间
+	required uint32 roomId = 1; //房间id
+}
+//加入房间
+message JoinRoomDown { //1100206_加入房间
+	required bool isSuccess = 1; //是否加入成功
+	optional RoomDetailInfoBean roomDetailInfoBean = 2; //房间信息
+}
+//房间内用户状态改变
+message UserStateChangeDown { //100208_房间内用户状态改变
+	required string userId = 1; //用户id
+	required uint32 state = 2; //状态（1进入，2退出，3准备，4取消准备，5匹配，6取消匹配）
+}
+//准备
+message ReadyUp { //1100209_准备
+}
+
+//取消准备
+message CancelReadyUp { //1100211_取消准备
+}
+
+//退出房间
+message ExitRoomUp { //1100213_退出房间
+}
+
+//匹配
+message MatchupRoomUp { //1100215_匹配
+}
+//取消匹配
+message CancelMatchupRoomUp { //1100217_取消匹配
+}
+
+//匹配超时
+message MatchupOutTimeDown { //1100218_匹配超时
+}
+
+//匹配成功
+message MatchupSuccessDown { //1100220_匹配成功
+	required BattleInfoBean battleInfoBean = 1; //战场信息
+}
+//获取房间信息
+message GetRoomInfoUp { //1100221_获取房间信息
+	required uint32 rid = 1; //房间id
+}
+//获取房间信息
+message GetRoomInfoDown { //1100222_获取房间信息
+	required RoomDetailInfoBean roomDetailInfoBean = 1; //房间信息
+}
+//一键加入
+message QuickJoinRoomUp { //1100223_一键加入
+}
+//一键加入
+message QuickJoinRoomDown { //1100224_一键加入
+	required RoomDetailInfoBean roomDetailInfoBean = 1; //房间信息
+}
+//踢人
+message KickOutUp { //1100225_踢人
+	required string kickOutUserId = 1; //踢出用户id
+}
+
+message FormationInfoBean { //阵容信息
+	required uint32 heroId = 1; //英雄id
+	required uint32 retinueId = 2; //侍从id
+}
+
+//设置出战英雄
+message FightHeroUp { //1100227_设置出战英雄
+	repeated FormationInfoBean formationInfoBean = 1; //阵容
+}
+//匹配超时
+message MatchupOutTimeUp { //1100229_匹配超时
+}
+//获取自己所在房间信息
+message GetUserRoomUp { //1100231_获取自己所在房间信息
+}
+//获取自己所在房间信息
+message GetUserRoomDown { //1100232_获取自己所在房间信息
+	required bool isRoom = 1; //是否在房间中
+	optional RoomDetailInfoBean roomDetailInfoBean = 2; //房间信息
+}
+
+

@@ -1,0 +1,72 @@
+option java_package = "com.cwa.message";
+option java_outer_classname = "UserMessage";
+enum UserCommondIdEnum { //指令号枚举
+	_UserLoginUp = 1100003;
+	_UserLoginDown = 1100004;
+	_UserLogoutUp = 1100005;
+	_GetUserinfoUp = 1100007;
+	_GetUserinfoDown = 1100008;
+	_ChangeUserNameUp = 1100009;
+	_ChangeUserIconUp = 1100011;
+	_ChangeUserStateUp = 1100013;
+}
+
+//----------------------------------------------
+message UserIdBean { //用户信息（注册时使用）
+	required string userId = 1; //用户id
+	required string createTime = 2; //用户创建时间
+	required string name = 3; //用户名
+	required uint32 level = 4; //用户等级
+}
+
+message UserInfoBean { //用户信息
+	required string name = 1; //用户名称
+	required uint32 level = 2; //用户等级
+	required uint32 experience = 3; //用户经验
+	required uint32 icon = 4; //头像
+	required uint32 power = 5; //体力
+	required uint32 modifyNameCount = 6; //修改名字次数
+	required string eventState = 7; //事件状态
+	required string functionState = 8; //功能状态
+	required uint32 lucky = 9; //幸运值
+	required uint32 currentState = 10; //功能状态
+	required uint32 buyPowerCount = 11; //购买体力次数
+}
+
+//--------------------------------------------------
+message UserLoginUp { //1100003_角色登录
+	required string token = 1; //用户id
+	required uint32 rid = 2; //区id
+	required string userIdStr = 3; //登陆的用户id
+	required uint32 asid = 4; //验证服id
+}
+
+message UserLoginDown { //1100004_角色登录
+	required uint32 loginState = 1; //登录状态
+	required string logoutTime = 2; //上一次下线时间
+}
+
+message UserLogoutUp { //1100005_角色登出
+}
+
+message GetUserinfoUp { //1100007_获取角色信息
+	required string userId = 1; //用户id
+}
+
+message GetUserinfoDown { //1100008_获取角色信息
+	required string userId = 1; //用户id
+	required UserInfoBean userInfoBean = 2; //用户信息
+}
+
+message ChangeUserNameUp { //1100009_修改用户名
+	required string userName = 1; //用户名
+}
+
+message ChangeUserIconUp { //1100011_替换头像
+	required uint32 icon = 1; //头像id
+}
+
+message ChangeUserStateUp { //1100013_更改用户状态
+	required string eventState = 1; //功能状态
+	required string functionState = 2; //事件状态
+}

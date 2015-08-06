@@ -1,0 +1,33 @@
+option java_package = "com.cwa.message";
+option java_outer_classname = "BErrorMessage";
+enum BErrorCommondIdEnum { //指令号枚举
+	_BErrorDown = 2999001;
+}
+
+
+ /**错误类型枚举格式：Error_&(模块名)_$(错误原因)=$(模块编号)
+例子：Error_User_LevelNotenough = 100001;
+* **/
+enum BErrorTypeEnum { //错误类型枚举
+    //系统
+    Error_Prx_ServerShutDown = 2999001;//服务未连接
+    //battle
+
+}
+
+enum BErrorLvelEnum { //错误级别枚举
+    ErrorLevel_Tips=1;//服务端引起：弹窗提示
+    ErrorLevel_Error=2;//客户端违规操作：断开连接
+}
+
+message BErrorParamBean { //错误参数
+	repeated string param = 1; //参数
+}
+
+message BErrorDown { //2999001_错误消息发送
+    required string errorMessage = 1; //错误消息名
+	required BErrorTypeEnum errorType = 2; //错误类型
+	required BErrorLvelEnum errorLevel=3;//错误级别
+	repeated string param = 4; //错误参数
+}
+

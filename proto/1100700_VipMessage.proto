@@ -1,0 +1,17 @@
+option java_package = "com.cwa.message";
+option java_outer_classname = "VipMessage";
+enum VipCommondIdEnum { //指令号枚举
+	_GetVipinfoUp = 1100701;
+	_GetVipinfoDown = 1100702;
+
+}
+
+//--------------------------------------------------
+message GetVipinfoUp { //1100701_获取VIP信息
+}
+
+message GetVipinfoDown { //1100702_获取VIP信息
+	required uint32 level = 1; //vip等级
+	required uint32 experience = 2; //vip经验
+	required uint32 awardState = 3; //领奖状态
+}

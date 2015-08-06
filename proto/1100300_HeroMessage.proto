@@ -1,0 +1,93 @@
+option java_package = "com.cwa.message";
+option java_outer_classname = "HeroMessage";
+enum HeroCommondIdEnum { //指令号枚举
+	_GetHeroInfoUp = 1100301;
+	_GetHeroInfoDown = 1100302;
+	_UseHeroBookUp = 1100303;
+	_UseHeroBookDown = 1100304;
+	_CallHeroUp = 1100305;
+	_CallHeroDown = 1100306;
+	_HeroEvolutionUp = 1100307;
+	_HeroTrainUp = 1100309;
+	_HeroTrainDown = 1100310;
+	_SaveTrainPatienceUp = 1100311;
+	_CancelTrainPatienceUp = 1100313;
+}
+
+//-------------------------------------------
+message SlotInfoBean { //插槽信息
+	required uint32 id = 1; //插槽id
+	required uint32 plugId = 2; //插件id
+}
+
+message EquipmentInfoBean { //装备信息
+	required uint32 positionId = 1; //装备位置
+	required uint32 level = 2; //装备等级
+	required uint32 quality = 3; //装备品质
+	repeated SlotInfoBean slotInfoBean = 4; //插槽信息
+}
+
+message HeroInfoBean { //英雄信息
+	required uint32 id = 1; //英雄id
+	required uint32 level = 2; //英雄等级
+	required uint32 experience = 3; //英雄经验
+	required uint32 star = 4; //英雄星级
+	required uint32 quality = 5; //英雄品质
+	repeated uint32 currentPatience = 6; //当前七属性耐性
+	required bool isSave = 7; //是否保存之前生成耐性
+	required uint32 trainType = 8; //培养类型
+	repeated uint32 waitPatience = 9; //待选七属性耐性
+	repeated EquipmentInfoBean equipmentInfoBean = 10; //装备信息
+}
+
+message ChangeToStoneKeyIdBean { //化灵bean
+	required uint32 itemKeyId = 1; //卷轴keyId
+	required uint32 count = 2; //数量
+}
+
+//--------------------------------------------------
+message GetHeroInfoUp { //1100301_获取英雄信息
+	required string userId = 1; //用户id
+}
+
+message GetHeroInfoDown { //1100302_获取英雄信息
+	required string userId = 1; //用户id
+	required uint32 heroExp=2;//英雄经验
+	repeated HeroInfoBean heroInfoBean = 3; //英雄信息
+}
+
+message UseHeroBookUp { //1100303_使用英雄典籍
+	required uint32 itemId = 1; //典籍id
+}
+
+message UseHeroBookDown { //1100304_使用英雄典籍
+	required bool isHaveHero = 1; //是否拥有该英雄（如果拥有就取化灵所得bean）
+	required uint32 heroKeyId = 2; //获得英雄id
+	optional ChangeToStoneKeyIdBean changeToStoneKeyIdBean = 3; //化灵所得
+}
+
+message CallHeroUp { //1100305_召唤英雄
+	required uint32 heroKeyId = 1; //英雄id
+}
+
+message HeroEvolutionUp { //1100307_英雄进化
+	required uint32 heroKeyId = 1; //英雄id
+}
+
+message HeroTrainUp { //1100309_培养英雄
+	required uint32 heroKeyId = 1; //英雄id
+	required uint32 trainType = 2; //培养类型
+}
+
+message HeroTrainDown { //1100310_培养英雄
+	required uint32 heroKeyId = 1; //英雄id
+	repeated uint32 patiences = 2; //生成耐性list
+}
+
+message SaveTrainPatienceUp { //1100311_保存培养耐性
+	required uint32 heroKeyId = 1; //英雄id
+}
+
+message CancelTrainPatienceUp { //1100313_保存培养耐性
+	required uint32 heroKeyId = 1; //英雄id
+}

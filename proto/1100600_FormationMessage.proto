@@ -1,0 +1,53 @@
+option java_package = "com.cwa.message";
+option java_outer_classname = "FormationMessage";
+enum FormationCommondIdEnum { //指令号枚举
+	_GetAllFormationInfoUp = 1100601;
+	_GetAllFormationInfoDown = 1100602;
+	_GetFormationDetailInfoUp = 1100603;
+	_GetFormationDetailInfoDown = 1100604;
+	_SetFormationUp = 1100605;
+}
+
+//----------------------------------------------------
+message HeroInfoBean { //英雄信息
+	required uint32 heroId = 1; //英雄id
+	required uint32 level = 2; //英雄等级
+	required uint32 star = 3; //英雄星级
+	required uint32 quality = 4; //英雄品质
+}
+
+message FormationInfoBean { //阵容信息
+	required uint32 heroId = 1; //英雄id
+	required uint32 retinueId = 2; //侍从id
+}
+
+message FormationDetailInfoBean { //阵容详细信息
+	required HeroInfoBean heroInfoBean = 2; //英雄
+	required HeroInfoBean retinueInfoBean = 3; //侍从
+}
+
+message FormationBean { //阵容
+	required uint32 formationType = 1; //阵容类型（见枚举）
+	repeated FormationInfoBean formationInfoBean = 2; //阵容信息
+}
+//--------------------------------------------------
+message GetAllFormationInfoUp { //1100601_获取所有阵容信息
+}
+
+message GetAllFormationInfoDown { //1100602_获取阵容信息
+	repeated FormationBean formationBean = 1; //阵容信息
+}
+
+message GetFormationDetailInfoUp { //1100603_查看对手阵容信息
+	required string targetId = 1; //用户id
+	required uint32 formationType = 2; //阵容类型（见枚举）
+}
+
+message GetFormationDetailInfoDown { //1100604_获取阵容信息
+	repeated FormationDetailInfoBean formationDetailInfoBean = 1; //阵容详细信息
+}
+
+message SetFormationUp { //1100605_设置阵容
+	required uint32 formationType = 1; //阵容类型（见枚举）
+	repeated FormationInfoBean formationInfoBean = 2; //阵容信息
+}

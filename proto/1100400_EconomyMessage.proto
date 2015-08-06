@@ -1,0 +1,25 @@
+option java_package = "com.cwa.message";
+option java_outer_classname = "EconomyMessage";
+enum EconomyCommondIdEnum { //指令号枚举
+	_GetUserEconomyUp = 1100401;
+	_GetUserEconomyDown = 1100402;
+	_ExchangeMoneyUp = 1100403;
+}
+
+//----------------------------------------------------
+message UserEconomyBean { //用户货币
+	required uint32 moneyType = 1; //货币类型
+	required uint32 moneyCount = 2; //货币数量
+}
+//--------------------------------------------------
+message GetUserEconomyUp { //1100401 得到用户经济信息
+}
+
+message GetUserEconomyDown { //1100402 得到用户经济信息
+	repeated UserEconomyBean userEconomyBean = 1; //用户货币列表
+}
+
+message ExchangeMoneyUp { //1100403 钻石兑换金券
+    required uint32 exchangeCount=1;//钻石兑换金券数量
+}
+

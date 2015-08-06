@@ -1,0 +1,272 @@
+option java_package = "com.cwa.message";
+option java_outer_classname = "BattleMessage";
+enum BattleCommondIdEnum { //指令号枚举(上行奇数，下行偶数）
+	_AttachBattleUp = 2100101;
+	_AttachBattleDown = 2100102;
+	_SyncBattleUp = 2100103;
+	_SyncBattleDown = 2100104;
+	_BattleStepDown = 2100106;
+	_MagicActionUp = 2100107;
+	_MagicActionDown = 2100108;
+	_MoveActionUp = 2100109;
+	_MoveActionDown = 2100110;
+	_RemoveDown = 2100112;
+	_IdleActionUp = 2100113;
+	_IdleActionDown = 2100114;
+	_NetDelayCheckUp = 2100115;
+	_NetDelayCheckDown = 2100116;
+	_DeadDown = 2100118;
+	_TrapTriggerDown=2100120;
+	_BattleOverDown=2100122;
+}
+
+//---------------------------------
+//buff
+message BuffContextBean { //BUFF
+	required uint32 performerId = 1; //BUFF 拥有者
+	required uint32 buffKeyId = 2; //BUFF keyId
+	required uint32 time = 3; //BUFF已经持续的时间
+}
+
+//动作状态
+message ActionStateContextBean { //动作状态
+	required uint32 stateSubType = 1; //动作状态子类型
+	required uint32 startTime = 2; //动作开始时间
+}
+//战场信息
+message BattleBean {
+	required uint32 battleKeyId = 1; //战场keyId
+	required uint32 currentTime = 2; //当前时间
+	required uint32 currentState = 3; //当前战场状态
+}
+//用户实体
+message UserEntityBean {
+	required uint64 uid = 1; //用户ID
+	required uint32 level = 2; //等级
+}
+//用户
+message PlayerBean { //用户
+	required UserEntityBean userEntityBean = 1; //用户
+	required uint32 troopType = 2; //队伍类型
+}
+//英雄实体
+message HeroEntityBean {
+	required uint32 id = 1; //英雄id（keyId）
+	required uint64 uid = 2; //英雄所属角色(为了租用英雄考虑)
+	required uint32 level = 3; //等级
+	required uint32 quality = 4; //品质
+	required uint32 star = 5; //星级
+}
+
+message HeroBean { //英雄
+	optional uint32 performerId = 1; //仿真器英雄id
+	required uint64 uid = 2; //用户id
+	required CoordinateBean position = 3; //位置
+	required HeroEntityBean heroEntityBean = 4; //英雄实体
+	repeated uint32 currentAttrs = 5; //当前属性
+	repeated BuffContextBean buffContextBeans = 6; //buff
+	repeated ActionStateContextBean actionStateContextBeans = 7; //动作状态
+	repeated MagicCDBean magicCDBeans = 8; //技能cd
+	optional uint32 retinueSkillId = 9;//随从技能id
+}
+
+message MagicCDBean{
+	required uint32 skillId = 1;//技能id
+	required int32 time = 2;//距离上次执行的时间
+}
+
+//宠物
+message PetBean {
+	required uint32 id = 1; //宠物id（keyId）
+	required uint32 level = 2; //等级
+	optional uint32 performerId = 3; //仿真器宠物id
+	required uint32 sourceId = 4; //所属英雄id
+	required uint64 uid = 5; //用户id
+	required CoordinateBean position = 6; //位置
+	repeated uint32 currentAttrs = 7; //当前属性
+	repeated BuffContextBean buffContextBeans = 8; //buff
+	repeated ActionStateContextBean actionStateContextBeans = 9; //动作状态
+	repeated MagicCDBean magicCDBeans = 10; //技能cd
+}
+//子弹
+message BulletBean {
+	required uint32 effectId = 1; //效果原型id（keyId）
+	optional uint32 performerId = 2; //仿真器子弹id
+	required uint32 sourceId = 3; //所属英雄id
+	required uint64 uid = 4; //用户id
+	required CoordinateBean position = 5; //位置
+	repeated ActionStateContextBean actionStateContextBeans = 6; //动作状态
+}
+
+//陷阱
+message TrapBean {
+	required uint32 id = 1; //陷阱id（keyId）
+	required uint32 effectId = 2; //效果id（keyId）
+	required uint32 startTime = 3; //陷阱开始时间
+	optional uint32 performerId = 4; //仿真器陷阱id
+	required uint32 sourceId = 5; //所属英雄id
+	required string uid = 6; //用户id
+	required CoordinateBean position = 7; //位置
+}
+//目标
+message CoordinateBean { //坐标
+	repeated uint32 c = 1 [packed = true]; //坐标位置
+}
+
+message ActionTargetBean { //目标
+	required uint32 targetType = 1; //目标类型（1执行者,2非执行者,3地块）
+	optional uint32 targetId = 2; //目标id
+	optional CoordinateBean areaTarget = 3; //区域目标
+}
+
+message MagicEffectBean { //效果bean
+	required uint32 eid = 1;//效果id
+	repeated PerformerEffectBean performerEffectBeans = 2;//执行者受到的影响
+
+	repeated MagicTrapBean trapBean = 3; //陷阱bean
+	repeated MagicPetBean petBean = 4; //宠物bean
+}
+message PerformerEffectBean{
+	required uint32 pid = 1; //受到影响的英雄
+	repeated uint32 values = 2;//影响的数值，和影响的效果一一对应
+	repeated uint32 effects = 3;//影响的效果（例如：暴击，格挡，吸血等）
+
+	repeated uint32 createBuffs = 4;//产生的buff
+	repeated uint32 deleteBuffs = 5;//删除的buff
+}
+
+message MagicTrapBean { //陷阱bean
+	required uint32 tid = 1; //tid
+	required CoordinateBean position = 2; //位置
+	required uint32 eid = 3;//效果id
+}
+
+message MagicPetBean { //宠物bean
+	required uint32 pid = 1; //pid
+	required CoordinateBean position = 2; //位置
+	required uint32 keyId = 3;//召唤出来的宠物keyId
+}
+
+message MagicResaultBean { //施法结果bean
+	repeated MagicEffectBean effectBeans = 1; //效果
+}
+
+message TrapTriggerBean { //陷阱触发bean
+	required uint32 pid = 1; //pid
+	optional uint32 value = 2;//值
+	repeated uint32 buffKeyId=3;//buffkeyid
+}
+//---------------------------------
+
+//链接战场
+message AttachBattleUp { //2100101_链接战场
+	required string battleId = 1; //战场id
+	required string userId = 2; //用户id
+}
+
+//链接战场返回
+message AttachBattleDown { //2100102_链接战场
+	required uint32 state = 1; //状态 0失败 1成功
+	optional SyncBattleDown syncBattleDown = 2; //同屏信息
+	optional uint32 countdown = 3; //战场开始倒计时
+}
+
+//同屏战场请求
+message SyncBattleUp { //2100103_同屏
+	required string battleId = 1; //战场id
+	required string userId = 2; //用户id
+}
+
+//同屏战场回复
+message SyncBattleDown { //2100104_同屏
+	optional BattleBean battleBean = 1;
+	repeated HeroBean heroBeans = 2;
+	repeated PetBean petBeans = 3;
+	repeated BulletBean bulletBeans = 4;
+	repeated TrapBean trapBeans = 5;
+	repeated PlayerBean playerBeans = 6;
+}
+
+//战场阶段
+message BattleStepDown { //100105_战场阶段推送
+	required uint32 step = 1; //战场阶段
+}
+//---------------------------------------
+//施法
+message MagicActionUp { //2100106_施法
+	required uint32 performerId = 1; //执行者id
+	required uint32 skillId = 2; //技能id
+	required ActionTargetBean actionTarget = 3; //动作目标
+}
+
+message MagicActionDown { //2100107_施法
+	required uint32 performerId = 1; //执行者id
+	required uint32 skillId = 2; //技能id
+	optional ActionTargetBean actionTarget = 3; //动作目标
+	optional uint32 state = 4; //状态阶段
+	optional MagicResaultBean magicResaultBean = 5; //结束阶段读取
+	required uint32 source = 6; //来源 0网络 1UI
+	optional uint32 mstate = 7; //消息状态1成功0失败
+	optional uint32 errorType = 8; //错误类型
+	optional uint32 errorValue = 9; //错误数据（例如cd时间差，能量差距等）
+}
+
+//移动
+message MoveActionUp { //2100108_移动
+	required uint32 performerId = 1; //执行者id
+	required ActionTargetBean actionTarget = 2; //动作目标
+	optional bool isAdjust = 3;//是否为调整攻击位置（false 为用户主动移动，true 为调整攻击位置）
+}
+
+message MoveActionDown { //2100109_移动
+	required uint32 performerId = 1; //执行者id
+	required ActionTargetBean actionTarget = 2; //动作目标
+	required uint32 state = 3; //状态阶段
+	required uint32 delayTime = 4; //延迟时间
+	required uint32 source = 6; //来源 0网络 1UI
+	optional uint32 mstate = 7; //消息状态
+
+	optional uint32 type = 8;//UI使用，用来标记是用户操作移动还是AI控制移动（不需要修改原有代码）
+	optional bool isAdjust = 9;//是否为调整攻击位置（false 为用户主动移动，true 为调整攻击位置）
+}
+
+message RemoveDown { //2100110_移除
+	required uint32 type = 1; //移除类型（buff、物体）
+	required uint32 id = 2; //id
+	optional MagicResaultBean magicResaultBean = 3; //技能结果
+}
+
+message IdleActionUp { //2100111_静止
+	required uint32 performerId = 1; //执行者id
+}
+
+message IdleActionDown { //2100114
+	required uint32 performerId = 1; //执行者id
+	required CoordinateBean position = 2; //位置
+}
+
+message NetDelayCheckUp { //2100112_网络延迟校验
+	required uint32 step = 1; //阶段(1第一次发来客户端当前,2发来客户端延迟)
+	required uint64 cTime = 2; //客户端时间
+	optional uint32 version = 3; //版本号
+}
+
+message NetDelayCheckDown { //2100113_网络延迟校验
+	required uint32 version = 1; //版本号
+	required uint64 cTime = 2; //客户端时间
+}
+
+message DeadDown{
+	required uint32 performerId = 1; //执行者id
+}
+
+message TrapTriggerDown{
+	required uint32 performerId = 1; //仿真器id
+	required uint32 keyId = 2; //原型id
+	repeated TrapTriggerBean trapTriggerBean=3;//受影响list
+}
+
+message BattleOverDown{
+	required uint32 failureTroopType = 1; //失败方的攻击类型
+}
+

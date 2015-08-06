@@ -1,0 +1,163 @@
+option java_package = "com.cwa.message";
+option java_outer_classname = "MatchMessage";
+enum MatchCommondIdEnum { //指令号枚举
+	_GetMatchinfoUp = 1100801;
+	_GetMatchinfoDown = 1100802;
+	_MatchStartUp = 1100803;
+	_MatchOverUp = 1100805;
+	_MatchOverDown = 1100806;
+	_MatchMopupUp = 1100807;
+	_MatchMopupDown = 1100808;
+	_BuyGoodsUp = 1100809;
+	_BuyGoodsDown = 1100810;
+	_BuyPowerUp = 1100811;
+	_ResetMatchCountUp = 1100813;
+	_GetStarAwardUp = 1100815;
+	_RefreshMatchShopUp = 1100817;
+	_RefreshMatchShopDown = 1100818;
+	_BuyAllGoodsUp = 1100819;
+	_BuyAllGoodsDown = 1100820;
+}
+
+message FormationInfoBean { //阵容信息
+	required uint32 heroId = 1; //英雄id
+	required uint32 retinueId = 2; //侍从id
+}
+
+message StarInfoBean { //星级信息
+	required uint32 passcardId = 1; //关卡id
+	required uint32 star = 2; //星数
+}
+
+message ChapterStarInfoBean { //章节星级信息
+	required uint32 chapterId = 1; //章节id
+	repeated StarInfoBean star = 2; //星数
+}
+
+message ChapterAwardInfoBean { //章节领奖信息
+	required uint32 chapterId = 1; //章节id
+	required uint32 awardStates = 3; //领奖状态
+}
+
+message BattleInfoBean { //战斗信息
+	required uint32 passcardId = 1; //关卡
+	required uint32 count = 2; //挑战次数
+}
+
+message ResetInfoBean { //重置信息
+	required uint32 passcardId = 1; //关卡
+	required uint32 count = 2; //重置次数
+}
+
+message ConcealInfoBean { //隐藏关卡信息
+	required uint32 passcardId = 1; //隐藏id
+	required uint64 time = 2; //剩余时间
+}
+
+message ShopInfoBean { //隐藏商店信息
+	required uint32 type = 1; //商店类型
+	required uint32 shopIp = 2; //商店id
+	required uint64 time = 3; //剩余时间
+	repeated uint32 goodsIndex = 4; //商品索引（-1为已售出）
+	required uint32 refreshCount = 5; //刷新次数
+}
+
+message MatchInfoBean { //副本信息
+	required uint32 type = 1; //副本类型
+	required uint32 passcard = 2; //当前关卡
+	repeated ChapterStarInfoBean chapterStarInfoBean = 3; //章节信息
+	repeated BattleInfoBean battleInfoBean = 4; //今日打过的副本
+	repeated ResetInfoBean resetInfoBean = 5; //今日重置的副本
+}
+
+message DropInfoBean { //掉落信息
+	required uint32 goodsId = 1; //物品id
+	required uint32 count = 2; //数量
+}
+
+message MopupDropInfoBean { //扫荡掉落信息
+	repeated DropInfoBean dropInfoBean = 1; //一次扫荡掉落
+}
+
+//--------------------------------------------------
+message GetMatchinfoUp { //1100801_获取副本信息
+}
+
+message GetMatchinfoDown { //1100802_获取副本信息
+	repeated MatchInfoBean MatchInfoBean = 1; //副本信息
+	required uint32 mopupCount = 2; //扫荡次数
+	repeated ConcealInfoBean concealInfoBean = 3; //隐藏关卡信息
+	repeated ShopInfoBean shopInfoBean = 4; //神秘商店信息
+	repeated ChapterAwardInfoBean chapterAwardInfoBean = 5; //领奖信息
+}
+
+message MatchStartUp { //1100803_比赛开始
+	required uint32 type = 1; //1:普通副本2:精英副本
+	required uint32 passcardId = 2; //关卡id
+	repeated FormationInfoBean formationInfoBean = 3; //阵容信息
+}
+
+message MatchOverUp { //1100805_比赛结束
+	required uint32 resultType = 1; //1胜利，0失败
+	optional uint32 star = 2; //胜利星数
+}
+
+message MatchOverDown { //1100806_比赛结束
+	repeated DropInfoBean dropInfoBean = 1; //掉落信息
+	required bool cancealOpen = 2; //是否开启隐藏关卡
+	required bool shopOpen = 3; //是否开始神秘商店
+	optional ConcealInfoBean concealInfoBean = 4; //隐藏关卡信息
+	optional ShopInfoBean shopInfoBean = 5; //神秘商店信息
+}
+
+message MatchMopupUp { //1100807_扫荡
+	required uint32 matchType = 1; //1:普通副本2:精英副本
+	required uint32 passcardId = 2; //关卡id
+	required bool more = 3; //是否多次扫荡
+}
+
+message MatchMopupDown { //1100808_扫荡
+	repeated MopupDropInfoBean mopupDropInfoBean = 1; //掉落信息
+	required bool cancealOpen = 2; //是否开启隐藏关卡
+	required bool shopOpen = 3; //是否开始神秘商店
+	optional ConcealInfoBean concealInfoBean = 4; //隐藏关卡信息
+	optional ShopInfoBean shopInfoBean = 5; //神秘商店信息
+}
+
+message BuyGoodsUp { //1100809_神秘商店购买物品
+	required uint32 shopType = 1; //商店类型
+	required uint32 shelfId = 2; //商品格位
+}
+
+message BuyGoodsDown { //1100810_神秘商店购买物品
+    required bool refresh=1;//是否刷新
+	repeated uint32 goodsIndex =2; //商品索引（-1为已售出）
+}
+
+message BuyPowerUp { //1100811_购买体力
+}
+
+message ResetMatchCountUp { //11008013_重置精英副本次数
+	required uint32 passcardId = 1; //关卡id
+}
+
+message GetStarAwardUp { //11008015_领取星级奖励
+	required uint32 chapterId = 1; //章节id
+	required uint32 index = 2; //奖品id
+}
+
+message RefreshMatchShopUp { //11008017_刷新神秘商店商品
+	required uint32 shopType = 1; //商店类型
+}
+
+message RefreshMatchShopDown { //11008018_刷新神秘商店商品
+	repeated uint32 goodsIndex = 1; //商品索引（-1为已售出）
+}
+
+message BuyAllGoodsUp { //1100819_神秘商店购买全部物品
+	required uint32 shopType = 1; //商店类型
+}
+
+message BuyAllGoodsDown { //1100820_神秘商店购买全部物品
+	repeated uint32 goodsIndex = 1; //商品索引（-1为已售出）
+}

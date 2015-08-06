@@ -1,0 +1,69 @@
+option java_package = "com.cwa.message";
+option java_outer_classname = "EquipmentMessage";
+enum EquipmentCommondIdEnum { //指令号枚举
+	_GetEquipmentInfoUp = 1100501;
+	_GetEquipmentInfoDown = 1100502;
+	_UpgradeEquipmentLevelUp = 1100503;
+	_UpgradeEquipmentQualityUp = 1100505;
+	_PutonPluginUp = 1100507;
+	_DischargePlugUp = 1100509;
+	_RefinePlugUp = 1100511;
+	_RefinePlugDown = 1100512;
+}
+
+//-------------------------------------------------
+message EquipmentInfoBean { //装备信息
+	required uint32 positionId = 1; //装备位置
+	required uint32 level = 2; //装备等级
+	required uint32 quality = 3; //装备品质
+	repeated SlotInfoBean slotInfoBean = 4; //插槽信息
+}
+
+message SlotInfoBean { //插槽信息
+	required uint32 id = 1; //插槽id
+	required uint32 plugId = 2; //插件id
+}
+
+//--------------------------------------------------
+message GetEquipmentInfoUp { //1100501_获取装备信息
+	required string userId = 1; //用户id
+	required uint32 heroKeyId = 2; //英雄id
+}
+
+message GetEquipmentInfoDown { //1100502_获取装备信息
+	required string userId = 1; //用户id
+	required uint32 heroKeyId = 2; //英雄id
+	repeated EquipmentInfoBean equipmentInfoBean = 3; //装备信息
+}
+
+message UpgradeEquipmentLevelUp { //1100503_装备升级
+	required uint32 heroKeyId = 1; //英雄id
+	required uint32 position = 2; //装备位置
+}
+
+message UpgradeEquipmentQualityUp { //1100505_装备进阶
+	required uint32 heroKeyId = 1; //英雄id
+	required uint32 position = 2; //装备位置
+}
+
+message PutonPluginUp { //1100507_装备插件
+	required uint32 heroKeyId = 1; //英雄id
+	required uint32 position = 2; //装备位置
+	required uint32 slotId = 3; //插槽id
+	required uint32 pluginId = 4; //插件id
+}
+
+message DischargePlugUp { //1100509_一键卸下插件
+	required uint32 heroKeyId = 1; //英雄id
+	required uint32 position = 2; //装备位置
+	required uint32 type = 3; //(1:道具卸下2：货币卸下)
+}
+
+message RefinePlugUp { //1100511_精炼插件
+	required uint32 plugId = 1; //插件id
+}
+
+message RefinePlugDown { //1100512_精炼插件
+	required uint32 plugId = 1; //插件id
+	required bool success = 2; //精炼是否成功
+}

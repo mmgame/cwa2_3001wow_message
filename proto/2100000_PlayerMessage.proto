@@ -1,0 +1,25 @@
+option java_package = "com.cwa.message";
+option java_outer_classname = "PlayerMessage";
+
+enum PlayerCommondIdEnum {//指令号枚举
+	_PlayerLoginUp = 2100001;
+	_PlayerLoginDown = 2100002;
+	_PlayerLogoutUp = 2100003;
+}
+
+
+//--------------------------------------------------
+
+message PlayerLoginUp { //2100001_角色登录
+	required uint64 userId = 1; //用户id
+	required uint64 createTime = 2; //注册时间
+}
+
+message PlayerLoginDown { //2100002_角色登录
+	required uint32 loginState = 1; //登录状态
+	required uint64 logoutTime = 2; //上一次下线时间
+}
+
+message PlayerLogoutUp { //2100003_角色登出
+}
+

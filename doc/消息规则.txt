@@ -1,0 +1,48 @@
+消息规则
+--------------------------
+指令号最高位为消息类型（1为逻辑服消息2为战场服消息）
+文件名：
+指令号_模块名+Message.proto
+例子：100001_XXXMessage.proto
+--------------------------
+包名统一:
+例子：option java_package = "com.cwa.message";
+--------------------------
+class名
+模块名+Message
+例子：option java_outer_classname = "XXXMessage";
+--------------------------
+指令号枚举 
+枚举名为：模块名+CommondIdEnum 例子：UserCommondIdEnum
+枚举参数名为：_+消息名  
+例子：enum UserCommondIdEnum {//指令号枚举
+	_UserRegisterRev = 100001;
+
+}
+--------------------------
+客户端发来的消息
+Up后缀
+例子：XXXUp
+message UserRegisterUp { //100001_账号注册
+	required string keyId = 1; //mac地址
+	required uint32 channel = 2; //渠道
+}
+--------------------------
+服务器发出的消息
+Down后缀
+例子：XXXDown
+message UserLoginDown { //100004_角色登录
+	required uint32 loginState = 1; //登录状态
+	required uint64 logoutTime = 2; //上一次下线时间
+}
+--------------------------
+其他类
+Bean后缀
+例子：XXXBean
+message UserInfoBean { //用户信息
+	required string userId = 1; //用户id
+	required uint64 createTime = 2; //注册时间
+	required uint32 level = 3; //用户等级
+	required string name = 4; //用户名字
+}
+--------------------------

@@ -1,0 +1,43 @@
+option java_package = "com.cwa.message";
+option java_outer_classname = "LErrorMessage";
+enum LErrorCommondIdEnum { //指令号枚举
+	_LErrorDown = 1999001;
+}
+
+//逻辑错误类型
+enum LErrorTypeEnum { //错误类型枚举
+	InputError = 1; //输入错误，这里的错误可能会很细
+	DataError = 2; //数据错误，这个错误客户端重新获取模块数据
+	SystemError = 3; //系统错误，暂时就模块服务器不可用
+}
+
+//模块枚举
+enum ModuleTypeEnum {
+	MT_User = 0; //用户
+	MT_Item = 1; //道具
+	MT_Room = 2; //房间
+	MT_Hero = 3; //英雄
+	MT_Economy = 4; //经济
+	MT_Equipment = 5; //装备
+	MT_Formation = 6; //队伍
+	MT_Vip = 7; //vip
+	MT_Match = 8; //副本
+}
+
+//输入错误类型，玩家主动输入或不是从数据中取的值（可能客户端代码写错了）都认为是输入的错误为
+enum InputErrorTypeEnum {
+	IE_UserName = 1; //名字输入错误
+	IE_ConsumeType = 2; //消费类型错误
+	IE_FormationType = 3; //阵容类型错误
+	IE_IconType = 4; //头像类型错误
+	IE_MatchType = 5; //副本类型错误
+	IE_PasscardId = 6; //关卡id错误
+	IE_Star = 6; //星级错误
+}
+
+message LErrorDown { //1999001_错误消息发送
+	required string errorMessage = 1; //错误消息名
+	required LErrorTypeEnum errorType = 2; //错误类型
+	optional ModuleTypeEnum moduleType = 3; //模块枚举，2和3类型公用
+	optional InputErrorTypeEnum inputErrorType = 4; //输入错误类型
+}
